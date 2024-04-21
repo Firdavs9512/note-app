@@ -50,3 +50,15 @@ func (a *App) CreateNote(title string, content string) Note {
 func (a *App) DeleteNote(id int) {
 	DB.Db.Delete(&Note{}, id)
 }
+
+// Update a note in the database
+func (a *App) UpdateNote(id int, title string, content string) Note {
+	note := Note{
+		Title:   title,
+		Content: content,
+	}
+
+	DB.Db.Model(&Note{}).Where("id = ?", id).Updates(&note)
+
+	return note
+}

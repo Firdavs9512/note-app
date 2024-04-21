@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { NoteInfo } from "../shared/models";
 import { notesMock } from "./mocks";
+import { UpdateNote } from "../../wailsjs/go/main/App";
 
 export const noteAtom = atom<NoteInfo[]>(notesMock);
 
@@ -44,19 +45,24 @@ export const deleteNoteAtom = atom(null, (get, set) => {
 
 export const updateNoteAtom = atom(
   null,
-  (get, set, update: Partial<NoteInfo>) => {
+  async (get, set, update: Partial<NoteInfo>) => {
     const notes = get(noteAtom);
     const selectedNote = get(selectedNoteAtom);
 
     if (!selectedNote) return;
 
-    const newNotes = notes.map((note) => {
+    const promises = notes.map((note) => {
       if (note.id === selectedNote.id) {
-        return { ...note, ...update, lastEditTime: new Date().getTime() };
+        return UpdateNote(parseInt(note.id), note.title, note.content)
+          .then(() => ({ ...note, ...update }))
+          .catch(() => {
+            return note; // Return the original note if update fails
+          });
       }
-
-      return note;
+      return Promise.resolve(note);
     });
+
+    const newNotes = await Promise.all(promises);
 
     set(noteAtom, newNotes);
     set(selectedNoteAtom, { ...selectedNote, ...update });

@@ -17,3 +17,7 @@ export function GetNotes() {
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
+
+export function UpdateNote(arg1, arg2, arg3) {
+  return window['go']['main']['App']['UpdateNote'](arg1, arg2, arg3);
+}
