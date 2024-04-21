@@ -25,3 +25,28 @@ func (a *App) startup(ctx context.Context) {
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
+
+// Get all notes in the database
+func (a *App) GetNotes() []Note {
+	var notes []Note
+	DB.Db.Find(&notes)
+
+	return notes
+}
+
+// Create a new note in the database
+func (a *App) CreateNote(title string, content string) Note {
+	note := Note{
+		Title:   title,
+		Content: content,
+	}
+
+	DB.Db.Create(&note)
+
+	return note
+}
+
+// Delete a note from the database
+func (a *App) DeleteNote(id int) {
+	DB.Db.Delete(&Note{}, id)
+}

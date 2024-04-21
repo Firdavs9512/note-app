@@ -1,28 +1,39 @@
-import { useRef, useState } from "react";
-import { Greet } from "../wailsjs/go/main/App";
+import { useEffect, useRef, useState } from "react";
+import { GetNotes } from "../wailsjs/go/main/App";
 import { Content, DraggableTopBar, RootLayout, Sidebar } from "./components";
 import ActionButtonsRow from "./components/ActionButtonsRow";
 import NoteList from "./components/NoteList";
 import MarkdownEditor from "./components/MarkdownEditor";
 import FloatingNoteTitle from "./components/FloatingNoteTitle";
+import { useSetAtom } from "jotai";
+import { createEmptyNoteAtom } from "./store";
 
 function App() {
   const contentContainerRef = useRef<HTMLDivElement>(null);
-
-  const [resultText, setResultText] = useState(
-    "Please enter your name below 👇"
-  );
-  const [name, setName] = useState("");
-  const updateName = (e: any) => setName(e.target.value);
-  const updateResultText = (result: string) => setResultText(result);
-
-  function greet() {
-    Greet(name).then(updateResultText);
-  }
+  const [loading, setLoading] = useState(true);
+  const createEmptyNote = useSetAtom(createEmptyNoteAtom);
 
   const resetScroll = () => {
     contentContainerRef.current?.scrollTo(0, 0);
   };
+
+  useEffect(() => {
+    GetNotes().then((notes: any[]) => {
+      notes.forEach((note) => {
+        createEmptyNote(
+          note.ID,
+          note.title,
+          note.content,
+          new Date(note.CreatedAt).getTime()
+        );
+      });
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <div className="mt-10 text-center">Loading</div>;
+  }
 
   return (
     <>

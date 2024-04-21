@@ -9,6 +9,7 @@ export type NotePreviewProps = NoteInfo & {
 
 const NotePreview = ({
   isActive = false,
+  id,
   title,
   lastEditTime,
   className,

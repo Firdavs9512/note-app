@@ -1,25 +1,34 @@
 import { atom } from "jotai";
 import { NoteInfo } from "../shared/models";
 import { notesMock } from "./mocks";
-import { v4 as uuidv4 } from "uuid";
 
 export const noteAtom = atom<NoteInfo[]>(notesMock);
 
 export const selectedNoteAtom = atom<NoteInfo | null>(null);
 
-export const createEmptyNoteAtom = atom(null, (get, set) => {
-  const notes = get(noteAtom);
+export const createEmptyNoteAtom = atom(
+  null,
+  (get, set, id, title, content, createdAt) => {
+    const notes = get(noteAtom);
 
-  const newNote: NoteInfo = {
-    id: uuidv4(),
-    title: "New note",
-    content: "",
-    lastEditTime: new Date().getTime(),
-  };
+    // if check for id
+    const oldNote = notes.find((note) => note.id === id);
+    if (oldNote) {
+      set(selectedNoteAtom, oldNote);
+      return;
+    }
 
-  set(noteAtom, [...notes, newNote]);
-  set(selectedNoteAtom, newNote);
-});
+    const newNote: NoteInfo = {
+      id: (id as number).toString(),
+      title: title as string,
+      content: content as string,
+      lastEditTime: createdAt as number,
+    };
+
+    set(noteAtom, [...notes, newNote]);
+    set(selectedNoteAtom, newNote);
+  }
+);
 
 export const deleteNoteAtom = atom(null, (get, set) => {
   const notes = get(noteAtom);

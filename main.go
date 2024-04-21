@@ -13,12 +13,20 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+var DB Database
+
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
 
+	// Init the database
+	err := DB.Init()
+	if err != nil {
+		panic(err)
+	}
+
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Title:  "Note App",
 		Width:  770,
 		Height: 568,
