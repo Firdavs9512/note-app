@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
 import { noteAtom, selectedNoteAtom } from "../store";
-import { NoteInfo } from "../shared/models";
+import { NoteContent, NoteInfo } from "../shared/models";
 
 export const useNotesList = ({ onSelect }: { onSelect?: () => void }) => {
   const notes = useAtomValue(noteAtom);

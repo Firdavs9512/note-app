@@ -3,8 +3,12 @@ import { cn } from "../utils/classnames";
 import NotePreview from "./NotePreview";
 import { useNotesList } from "../hooks/useNotesList";
 
-const NoteList = ({ className, ...props }: ComponentProps<"ul">) => {
-  const { notes, selectedNote, handleSelectNote } = useNotesList({});
+type NoteListProps = ComponentProps<"ul"> & {
+  onSelect?: () => void;
+};
+
+const NoteList = ({ onSelect, className, ...props }: NoteListProps) => {
+  const { notes, selectedNote, handleSelectNote } = useNotesList({ onSelect });
 
   if (notes.length === 0) {
     return (

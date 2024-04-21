@@ -5,11 +5,14 @@ import {
   MDXEditor,
   quotePlugin,
 } from "@mdxeditor/editor";
-import { useAtomValue } from "jotai";
-import { selectedNoteAtom } from "../store";
+import { useAtomValue, useSetAtom } from "jotai";
+import { selectedNoteAtom, updateNoteAtom } from "../store";
+import { useDebounce } from "use-debounce";
 
 const MarkdownEditor = () => {
   const selectedNote = useAtomValue(selectedNoteAtom);
+  const updateNote = useSetAtom(updateNoteAtom);
+  const [debouncedUpdate] = useDebounce(updateNote, 500);
 
   if (!selectedNote)
     return (
@@ -20,7 +23,11 @@ const MarkdownEditor = () => {
 
   return (
     <MDXEditor
+      key={selectedNote.id}
       markdown={selectedNote.content}
+      onChange={(md) => {
+        debouncedUpdate({ id: selectedNote.id, content: md }); // Use debounced update
+      }}
       plugins={[
         headingsPlugin(),
         listsPlugin(),
