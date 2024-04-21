@@ -8,12 +8,12 @@ export const selectedNoteAtom = atom<NoteInfo | null>(null);
 
 export const createEmptyNoteAtom = atom(
   null,
-  (get, set, id, title, content, createdAt) => {
+  (get, set, id, title, content, createdAt, selected = false) => {
     const notes = get(noteAtom);
 
     // if check for id
     const oldNote = notes.find((note) => note.id === id);
-    if (oldNote) {
+    if (oldNote && selected) {
       set(selectedNoteAtom, oldNote);
       return;
     }
@@ -26,7 +26,7 @@ export const createEmptyNoteAtom = atom(
     };
 
     set(noteAtom, [...notes, newNote]);
-    set(selectedNoteAtom, newNote);
+    if (selected) set(selectedNoteAtom, newNote);
   }
 );
 

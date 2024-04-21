@@ -7,13 +7,14 @@ import { CreateNote } from "../../../wailsjs/go/main/App";
 const NewNoteButton = ({ ...props }: ActionButtonProps) => {
   const createEmptyNote = useSetAtom(createEmptyNoteAtom);
 
-  const handleClick = async () => {
+  const handleClick = () => {
     CreateNote("Note title", "").then((note: any) => {
       createEmptyNote(
         note.ID,
         note.title,
         "",
-        new Date(note.CreatedAt).getTime()
+        new Date(note.CreatedAt).getTime(),
+        true
       );
     });
   };
