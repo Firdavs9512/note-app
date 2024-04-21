@@ -5,11 +5,22 @@ import {
   MDXEditor,
   quotePlugin,
 } from "@mdxeditor/editor";
+import { useAtomValue } from "jotai";
+import { selectedNoteAtom } from "../store";
 
 const MarkdownEditor = () => {
+  const selectedNote = useAtomValue(selectedNoteAtom);
+
+  if (!selectedNote)
+    return (
+      <div className="mt-5 font-semibold text-center">
+        Select a note to edit
+      </div>
+    );
+
   return (
     <MDXEditor
-      markdown="## Hello, world!"
+      markdown={selectedNote.content}
       plugins={[
         headingsPlugin(),
         listsPlugin(),

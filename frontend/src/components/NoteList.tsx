@@ -1,10 +1,12 @@
 import { ComponentProps } from "react";
-import { notesMock } from "../store/mocks";
 import { cn } from "../utils/classnames";
 import NotePreview from "./NotePreview";
+import { useNotesList } from "../hooks/useNotesList";
 
 const NoteList = ({ className, ...props }: ComponentProps<"ul">) => {
-  if (notesMock.length === 0) {
+  const { notes, selectedNote, handleSelectNote } = useNotesList({});
+
+  if (notes.length === 0) {
     return (
       <ul>
         <li>
@@ -16,8 +18,13 @@ const NoteList = ({ className, ...props }: ComponentProps<"ul">) => {
 
   return (
     <ul className={cn(className)} {...props}>
-      {notesMock.map((note, index) => (
-        <NotePreview key={index} {...note} />
+      {notes.map((note, index) => (
+        <NotePreview
+          key={index}
+          isActive={selectedNote?.id === note.id}
+          onClick={() => handleSelectNote(note)}
+          {...note}
+        />
       ))}
     </ul>
   );
