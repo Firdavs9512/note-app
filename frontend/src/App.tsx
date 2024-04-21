@@ -3,6 +3,8 @@ import { Greet } from "../wailsjs/go/main/App";
 import { Content, DraggableTopBar, RootLayout, Sidebar } from "./components";
 import ActionButtonsRow from "./components/ActionButtonsRow";
 import NoteList from "./components/NoteList";
+import MarkdownEditor from "./components/MarkdownEditor";
+import FloatingNoteTitle from "./components/FloatingNoteTitle";
 
 function App() {
   const [resultText, setResultText] = useState(
@@ -25,7 +27,8 @@ function App() {
           <NoteList className="mt-3 space-y-1" />
         </Sidebar>
         <Content className="border-l bg-zinc-900/50 border-l-white/20">
-          Content
+          <FloatingNoteTitle className="pt-2" />
+          <MarkdownEditor />
         </Content>
       </RootLayout>
     </>
