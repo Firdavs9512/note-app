@@ -45,6 +45,10 @@ func main() {
 			WindowIsTranslucent:  true,
 			WebviewIsTransparent: true,
 			TitleBar:             mac.TitleBarHiddenInset(),
+			About: &mac.AboutInfo{
+				Title:   "Note App",
+				Message: "© 2024 Firdavs",
+			},
 		},
 	})
 
